@@ -56,8 +56,10 @@ public class Pref extends Activity {
         List<ApplicationInfo> appInfoList
                 = pm.getInstalledApplications(PackageManager.GET_META_DATA);
         for(ApplicationInfo appInfo : appInfoList){
+            String pn = appInfo.packageName;
             for (int i = 0; i < cntmax; i++) {
-                if (strs[i].equals(appInfo.packageName)) {
+//                if (pn.equals(strs[i])) {
+                  if (pn.contains("google")) {
                     AppData data = new AppData();
                     data.label = appInfo.loadLabel(pm).toString();
                     data.icon = appInfo.loadIcon(pm);
