@@ -3,6 +3,7 @@ package com.foijapan.app.led_indicator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -22,59 +24,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pref extends Activity {
-    static private List<AppData> mDataList = new ArrayList<AppData>();
-    static private AppListAdapter sAdapter = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.pref);
 
-        getInstalledApplication(Common.getNum());
+        // 端末にインストール済のアプリケーション一覧情報を取得
+        final PackageManager pm = getPackageManager();
+        final int flags = PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_DISABLED_COMPONENTS;
+        final List<ApplicationInfo> installedAppList = pm.getInstalledApplications(flags);
+
+        // リストに一覧データを格納する
+        final List<AppData> dataList = new ArrayList<AppData>();
+        for (ApplicationInfo app : installedAppList) {
+            AppData data = new AppData();
+            data.label = app.loadLabel(pm).toString();
+            data.icon = app.loadIcon(pm);
+            data.pname = app.packageName;
+            dataList.add(data);
+        }
 
         // リストビューにアプリケーションの一覧を表示する
         final ListView listView = new ListView(this);
-        if (sAdapter == null) {
-            sAdapter = new AppListAdapter(this, mDataList);
-        }
-        listView.setAdapter(sAdapter);
-        setContentView(listView);
-    }
-
-    private void getInstalledApplication(int cntmax){
-        String strs[] = new String[Common.getNum()];
-        AppList al = new AppList(getApplicationContext());
-        try {
-            strs = al.readFromFile(cntmax);
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-        PackageManager pm = getPackageManager();
-        List<ApplicationInfo> appInfoList
-                = pm.getInstalledApplications(PackageManager.GET_META_DATA);
-        for(ApplicationInfo appInfo : appInfoList){
-            String pn = appInfo.packageName;
-            for (int i = 0; i < cntmax; i++) {
-//                if (pn.equals(strs[i])) {
-                  if (pn.contains("google")) {
-                    AppData data = new AppData();
-                    data.label = appInfo.loadLabel(pm).toString();
-                    data.icon = appInfo.loadIcon(pm);
-                    data.pn = appInfo.packageName;
-                    mDataList.add(data);
-                }
+        listView.setAdapter(new AppListAdapter(this, dataList));
+        //クリック処理
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ApplicationInfo item = installedAppList.get(position);
+                PackageManager pManager = getPackageManager();
+                Intent intent = pManager.getLaunchIntentForPackage(item.packageName);
+                startActivity(intent);
             }
-        }
+        });
+        setContentView(listView);
     }
 
     // アプリケーションデータ格納クラス
     private static class AppData {
         String label;
         Drawable icon;
-        String pn;
+        String pname;
     }
 
     // アプリケーションのラベルとアイコンを表示するためのアダプタークラス
@@ -83,7 +73,7 @@ public class Pref extends Activity {
         private final LayoutInflater mInflater;
 
         public AppListAdapter(Context context, List<AppData> dataList) {
-            super(context, R.layout.pref);
+            super(context, R.layout.activity_main);
             mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             addAll(dataList);
         }
@@ -94,10 +84,10 @@ public class Pref extends Activity {
             ViewHolder holder = new ViewHolder();
 
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.pref, parent, false);
-                holder.textLabel = convertView.findViewById(R.id.label);
-                holder.imageIcon = convertView.findViewById(R.id.icon);
-                holder.cb = convertView.findViewById(R.id.id_pref_cb);
+                convertView = mInflater.inflate(R.layout.activity_main, parent, false);
+                holder.textLabel = (TextView) convertView.findViewById(R.id.label);
+                holder.imageIcon = (ImageView) convertView.findViewById(R.id.icon);
+                holder.packageName = (TextView) convertView.findViewById(R.id.pname);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -106,20 +96,20 @@ public class Pref extends Activity {
             // 表示データを取得
             final AppData data = getItem(position);
             // ラベルとアイコンをリストビューに設定
-            holder.textLabel.setText(data.label);
-            holder.imageIcon.setImageDrawable(data.icon);
-            holder.cb.setOnClickListener(v -> {
-                int num = position;
-            });
+            if( holder.textLabel != null) {
+                holder.textLabel.setText(data.label);
+                holder.imageIcon.setImageDrawable(data.icon);
+                holder.packageName.setText(data.pname);
+            } 
 
             return convertView;
         }
     }
 
+    // ビューホルダー
     private static class ViewHolder {
         TextView textLabel;
         ImageView imageIcon;
-        CheckBox cb;
+        TextView packageName;
     }
-
 }
