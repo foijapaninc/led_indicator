@@ -73,7 +73,7 @@ public class Pref extends Activity {
         private final LayoutInflater mInflater;
 
         public AppListAdapter(Context context, List<AppData> dataList) {
-            super(context, R.layout.activity_main);
+            super(context, R.layout.pref);
             mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             addAll(dataList);
         }
@@ -84,10 +84,10 @@ public class Pref extends Activity {
             ViewHolder holder = new ViewHolder();
 
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.activity_main, parent, false);
-                holder.textLabel = (TextView) convertView.findViewById(R.id.label);
-                holder.imageIcon = (ImageView) convertView.findViewById(R.id.icon);
-                holder.packageName = (TextView) convertView.findViewById(R.id.pname);
+                convertView = mInflater.inflate(R.layout.pref, parent, false);
+                holder.textLabel = convertView.findViewById(R.id.label);
+                holder.imageIcon = convertView.findViewById(R.id.icon);
+                holder.packageName = convertView.findViewById(R.id.pname);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -98,6 +98,9 @@ public class Pref extends Activity {
             // ラベルとアイコンをリストビューに設定
             if( holder.textLabel != null) {
                 holder.textLabel.setText(data.label);
+                if(data.label.startsWith("Tether")){
+                    holder.textLabel.setText(data.label);
+                }
                 holder.imageIcon.setImageDrawable(data.icon);
                 holder.packageName.setText(data.pname);
             } 
