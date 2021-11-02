@@ -15,15 +15,15 @@ public class AppList {
     AppList(Context context){
         mCtx = context;
     }
-    public String[] readFromFile(int cntmax) throws IOException {
+    public String[] readFromFile() throws IOException {
         String strs[] = new String[Common.getNum()];
-        FileInputStream fis = new FileInputStream(new File(Common.FILEPATH));
+        InputStream fis = mCtx.getResources().openRawResource(R.raw.applist);
 
         if (fis != null) {
             InputStreamReader inputStreamReader = new InputStreamReader(fis);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String tempString = "";
-            for (int i = 0; i < cntmax; i++) {
+            for (int i = 0; i < strs.length; i++) {
                 tempString = bufferedReader.readLine();
                 strs[i] = tempString;
             }

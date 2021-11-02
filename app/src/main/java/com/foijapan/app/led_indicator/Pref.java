@@ -15,7 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,42 +31,55 @@ public class Pref extends Activity {
         final PackageManager pm = getPackageManager();
         final int flags = PackageManager.GET_META_DATA;
         final List<ApplicationInfo> installedAppList = pm.getInstalledApplications(flags);
+        String[] strs = null;
 
         // リストに一覧データを格納する
         final List<AppData> dataList = new ArrayList<AppData>();
         for (ApplicationInfo app : installedAppList) {
-
+            boolean ret = false;
             if ((app.flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM) {
                 continue;
             }
-            AppData data = new AppData();
-            data.label = app.loadLabel(pm).toString();
-            data.icon = app.loadIcon(pm);
-            data.pname = app.packageName;
-            dataList.add(data);
+
+            try {
+                if(strs == null) {
+                    strs = getAplicationList();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(strs.length < 1){
+                Toast.makeText(getApplicationContext(), getString(R.string.filenotfound), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            for(int i = 0;i < strs.length;i++){
+                ret = strs[i].equals(app.packageName);
+                if(ret){
+                    AppData data = new AppData();
+                    data.label = app.loadLabel(pm).toString();
+                    data.icon = app.loadIcon(pm);
+                    dataList.add(data);
+                }
+            }
         }
 
         // リストビューにアプリケーションの一覧を表示する
         final ListView listView = new ListView(this);
         listView.setAdapter(new AppListAdapter(this, dataList));
-        //クリック処理
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ApplicationInfo item = installedAppList.get(position);
-                PackageManager pManager = getPackageManager();
-                Intent intent = pManager.getLaunchIntentForPackage(item.packageName);
-                startActivity(intent);
-            }
-        });
         setContentView(listView);
+    }
+
+    private String[] getAplicationList() throws IOException {
+        AppList al = new AppList(getApplicationContext());
+        return  al.readFromFile();
     }
 
     // アプリケーションデータ格納クラス
     private static class AppData {
         String label;
         Drawable icon;
-        String pname;
+//        String pname;
     }
 
     // アプリケーションのラベルとアイコンを表示するためのアダプタークラス
@@ -87,7 +102,7 @@ public class Pref extends Activity {
                 convertView = mInflater.inflate(R.layout.pref, parent, false);
                 holder.textLabel = convertView.findViewById(R.id.label);
                 holder.imageIcon = convertView.findViewById(R.id.icon);
-                holder.packageName = convertView.findViewById(R.id.pname);
+//                holder.packageName = convertView.findViewById(R.id.pname);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -102,7 +117,7 @@ public class Pref extends Activity {
                     holder.textLabel.setText(data.label);
                 }
                 holder.imageIcon.setImageDrawable(data.icon);
-                holder.packageName.setText(data.pname);
+//                holder.packageName.setText(data.pname);
             }
 
             return convertView;
@@ -113,6 +128,6 @@ public class Pref extends Activity {
     private static class ViewHolder {
         TextView textLabel;
         ImageView imageIcon;
-        TextView packageName;
+//        TextView packageName;
     }
 }
