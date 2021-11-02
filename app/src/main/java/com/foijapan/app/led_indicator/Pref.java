@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -59,6 +60,7 @@ public class Pref extends Activity {
                     AppData data = new AppData();
                     data.label = app.loadLabel(pm).toString();
                     data.icon = app.loadIcon(pm);
+                    data.pname = app.packageName;
                     dataList.add(data);
                 }
             }
@@ -79,7 +81,7 @@ public class Pref extends Activity {
     private static class AppData {
         String label;
         Drawable icon;
-//        String pname;
+        String pname;
     }
 
     // アプリケーションのラベルとアイコンを表示するためのアダプタークラス
@@ -95,14 +97,13 @@ public class Pref extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
             ViewHolder holder = new ViewHolder();
 
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.pref, parent, false);
                 holder.textLabel = convertView.findViewById(R.id.label);
                 holder.imageIcon = convertView.findViewById(R.id.icon);
-//                holder.packageName = convertView.findViewById(R.id.pname);
+                holder.cb = convertView.findViewById(R.id.id_pref_cb);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -110,14 +111,16 @@ public class Pref extends Activity {
 
             // 表示データを取得
             final AppData data = getItem(position);
-            // ラベルとアイコンをリストビューに設定
             if( holder.textLabel != null) {
                 holder.textLabel.setText(data.label);
-                if(data.label.startsWith("Tether")){
-                    holder.textLabel.setText(data.label);
-                }
                 holder.imageIcon.setImageDrawable(data.icon);
-//                holder.packageName.setText(data.pname);
+                ViewHolder finalHolder = holder;
+                holder.cb.setOnClickListener(v -> {
+                    if(finalHolder.cb.isChecked()) {
+                        int num = position;
+                        Toast.makeText(getContext(), getItem(position).pname, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             return convertView;
@@ -129,5 +132,7 @@ public class Pref extends Activity {
         TextView textLabel;
         ImageView imageIcon;
 //        TextView packageName;
+        CheckBox cb;
+
     }
 }
