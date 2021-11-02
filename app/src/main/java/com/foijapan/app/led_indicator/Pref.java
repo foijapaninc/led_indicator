@@ -1,6 +1,5 @@
 package com.foijapan.app.led_indicator;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,15 +10,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +27,16 @@ public class Pref extends Activity {
 
         // 端末にインストール済のアプリケーション一覧情報を取得
         final PackageManager pm = getPackageManager();
-        final int flags = PackageManager.GET_UNINSTALLED_PACKAGES | PackageManager.GET_DISABLED_COMPONENTS;
+        final int flags = PackageManager.GET_META_DATA;
         final List<ApplicationInfo> installedAppList = pm.getInstalledApplications(flags);
 
         // リストに一覧データを格納する
         final List<AppData> dataList = new ArrayList<AppData>();
         for (ApplicationInfo app : installedAppList) {
+
+            if ((app.flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM) {
+                continue;
+            }
             AppData data = new AppData();
             data.label = app.loadLabel(pm).toString();
             data.icon = app.loadIcon(pm);
@@ -103,7 +103,7 @@ public class Pref extends Activity {
                 }
                 holder.imageIcon.setImageDrawable(data.icon);
                 holder.packageName.setText(data.pname);
-            } 
+            }
 
             return convertView;
         }
