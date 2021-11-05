@@ -34,3 +34,8 @@ com.google.android.talk
 com.weico.international
 com.sina.weibo
 com.google.android.apps.dynamite
+com.nttdocomo.android.docomomail
+com.kddi.android.aumail
+jp.softbank.mb.mail
+com.microsoft.office.outlook
+com.google.android.gm
