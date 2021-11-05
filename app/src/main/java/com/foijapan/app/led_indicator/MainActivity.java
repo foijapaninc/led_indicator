@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -25,19 +26,18 @@ public class MainActivity extends Activity {
     PackageManager pm = null;
 
     ListView listView1;
-    TextView countTextView;
     static List<AppInfos> dataList = new ArrayList<AppInfos>();
     static PackageListAdapter adapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
 
         pm = getApplicationContext().getPackageManager();
 
         listView1 = (ListView) findViewById(R.id.listView1);
-        countTextView = (TextView)findViewById(R.id.countTextView);
 
         adapter = new PackageListAdapter();
         listView1.setAdapter(adapter);
@@ -85,7 +85,6 @@ public class MainActivity extends Activity {
                     Drawable drawable = app.loadIcon(pm);
                     String packagename = app.packageName;
                     dataList.add(new AppInfos(packagename, label, drawable, false));
-                    countTextView.setText(dataList.size() + "");
                 }
             }
         }

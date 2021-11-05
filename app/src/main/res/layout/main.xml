@@ -5,27 +5,39 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <TextView
-        android:textSize="48sp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="2dp"
-        android:id="@+id/countTextView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#999999"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"/>
-    <View
-        android:layout_height="5dp"
-        android:layout_width="match_parent"
-        android:background="#A4C739"/>
+        android:layout_height="30dp"
+        android:background="#0000dd"
+        >
+        <TextView android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="12dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="@string/checkitem"/>
+    </LinearLayout>
     <ListView
         android:layout_height="0dip"
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_weight="1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+        <Button android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:layout_height="50dp"
+                android:layout_width="0dp"
+                android:text="Cancel"
+                android:id="@+id/id_btb_cancel"/>
+        <Button android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:layout_height="50dp"
+            android:layout_width="0dp"
+            android:text="Apply"
+            android:id="@+id/id_btb_apply"/>
+    </LinearLayout>
 </LinearLayout>

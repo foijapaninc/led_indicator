@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">フラッシュ通知</string>
     <string name="filenotfound">定義ファイルが見当たりません</string>
+    <string name="checkitem">通知にフラッシュさせたいアプリにチェックを入れてください。</string>
 </resources>

@@ -21,8 +21,8 @@ public class NotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         if(isSetPackageName(sbn.getPackageName())){
-            StartStop ss = new StartStop();
-            ss.blink2();
+//            StartStop ss = new StartStop();
+//            ss.blink2();
         }
     }
 
