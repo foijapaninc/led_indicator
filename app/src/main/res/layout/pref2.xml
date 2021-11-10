@@ -7,22 +7,32 @@
     >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="#0000dd"
-        >
+        android:layout_height="50dp"
+        android:background="#0000dd">
         <TextView android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="12dp"
                     android:textColor="#FFFFFF"
-                    android:gravity="center"
+                    android:gravity="left|center_vertical"
                     android:textStyle="bold"
-                    android:text="@string/checkitem"/>
+                    android:text="@string/str_ex_flash"/>
     </LinearLayout>
-    <ListView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_height="0dip"
-        android:id="@+id/listView1"
         android:layout_width="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
+        <include layout="@layout/pattern"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#808080"/>
+        <include layout="@layout/flashtime"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#808080"/>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -37,7 +47,7 @@
             android:layout_margin="5dp"
             android:layout_height="50dp"
             android:layout_width="0dp"
-            android:text="@string/apply"
+            android:text="@string/settings"
             android:id="@+id/id_btb_apply"/>
     </LinearLayout>
 </LinearLayout>

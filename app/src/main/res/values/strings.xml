@@ -2,4 +2,24 @@
     <string name="app_name">フラッシュ通知</string>
     <string name="filenotfound">定義ファイルが見当たりません</string>
     <string name="checkitem">通知にフラッシュさせたいアプリにチェックを入れてください。</string>
+    <string name="str_ex_flash">通知に使用するフラッシュのパターンを選択し、通知を行う時間を入力後、「設定する」を選択してください。</string>
+    <string name="str_pattern">フラッシュのパターン</string>
+    <string name="pattern_1">パターン１</string>
+    <string name="pattern_2">パターン２</string>
+    <string name="pattern_3">パターン３</string>
+    <string name="pattern_preview">プレビュー</string>
+
+    <string name="str_time_notification">通知時間</string>
+    <string name="tn_min">分</string>
+    <string name="tn_infinity">通知を削除するまで</string>
+
+    <string name="cancel">キャンセル</string>
+    <string name="apply">適用する</string>
+    <string name="settings">設定する</string>
+    
+    <string name="manage_notification_access_title">通知へのアクセス</string>
+    
+    <string name="dlg_to_notification_access">[@string/manage_notification_access_title]を選択し、[@string/app_name]を[許可]に変更してください。</string>
+    <string name="to_na">[@string/manage_notification_access_title]へ</string>
+    <string name="goback">戻る</string>
 </resources>
