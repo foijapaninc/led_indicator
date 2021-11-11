@@ -2,15 +2,18 @@ package com.foijapan.app.led_indicator;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +32,9 @@ public class MainActivity extends Activity {
     ListView listView1;
     static List<AppInfos> dataList = new ArrayList<AppInfos>();
     static PackageListAdapter adapter = null;
+
+    int mNumOfCheckedApp = 0;
+    List<String> mPns = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,49 @@ public class MainActivity extends Activity {
         listView1.setAdapter(adapter);
 
         updatePackageList();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Button btnApply = findViewById(R.id.id_btb_apply);
+        btnApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNumOfCheckedApp = 0;
+                for(int i = 0; i < dataList.size();i++){
+                    if(isCheckedBtn(i)){
+                        mNumOfCheckedApp++;
+                        addPackages(getCheckedPackageName(i));
+                    }
+                }
+                Intent intent = new Intent();
+                intent.putExtra(Common.LIST_OF_CHECKED_APP, (Serializable) mPns);
+                intent.setClass(getApplicationContext(),Pref2.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnCancel = findViewById(R.id.id_btb_cancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+    }
+
+    private void addPackages(String pn){
+        mPns.add(pn);
+    }
+
+    private String getCheckedPackageName(int position){
+        return dataList.get(position).getPackageName();
+    }
+
+    private boolean isCheckedBtn(int position){
+        boolean isChecked = dataList.get(position).isOn();
+        return isChecked;
     }
 
     private String[] getAplicationList() throws IOException {
@@ -135,9 +185,10 @@ public class MainActivity extends Activity {
                 cb.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (cb.isChecked()) {
-                            Toast.makeText(getApplicationContext(), aInfo.getPackageName(), Toast.LENGTH_SHORT).show();
-                        }
+                        aInfo.setIsOn(cb.isChecked());
+//                        if (cb.isChecked()) {
+//                            Toast.makeText(getApplicationContext(), aInfo.isOn + ":"+aInfo.getPackageName(), Toast.LENGTH_SHORT).show();
+//                        }
                     }
                 });
             }

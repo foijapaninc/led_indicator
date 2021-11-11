@@ -43,11 +43,13 @@
                 android:layout_width="0dp"
                 android:text="@string/cancel"
                 android:id="@+id/id_btb_cancel"/>
-        <Button android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:layout_height="50dp"
+
+        <Button
+            android:id="@+id/id_btn_setting"
             android:layout_width="0dp"
-            android:text="@string/settings"
-            android:id="@+id/id_btb_apply"/>
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="@string/settings" />
     </LinearLayout>
 </LinearLayout>

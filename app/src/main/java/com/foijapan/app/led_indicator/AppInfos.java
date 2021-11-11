@@ -34,4 +34,8 @@ public class AppInfos {
     public boolean isOn(){
         return this.isOn;
     }
+
+    public void setIsOn(boolean isOn){
+        this.isOn = isOn;
+    }
 }

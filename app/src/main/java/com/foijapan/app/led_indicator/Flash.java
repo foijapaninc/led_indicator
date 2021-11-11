@@ -18,14 +18,21 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class Flash{
+public class Flash extends Activity{
     private String mCameraID = "";
     private CameraManager mCameraManager = null;
     private Context mCtx = null;
     private final Handler handler = new Handler();
 
-    Flash(Context context){
-        mCtx = context;
+    @Override
+    public void onCreate(Bundle si){
+        super.onCreate(si);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.flash_preview);
+
+        setCameraInfo();
+        blink3();
+
     }
 
     private void setTorch(boolean isFlash){
