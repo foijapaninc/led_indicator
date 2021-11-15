@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
                 }
                 Intent intent = new Intent();
                 intent.putExtra(Common.LIST_OF_CHECKED_APP, (Serializable) mPns);
-                intent.setClass(getApplicationContext(),Pref2.class);
+                intent.setClass(getApplicationContext(),Pref.class);
                 startActivity(intent);
             }
         });

@@ -1,25 +1,10 @@
 package com.foijapan.app.led_indicator;
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
-import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
-import android.view.Window;
-import android.widget.CompoundButton;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 public class Flash{
     private String mCameraID = "";
@@ -72,22 +57,6 @@ public class Flash{
             flashLightOff();
         }
     }
-
-//    private void setCameraInfo() {
-//        if(mCameraManager == null) {
-//            mCameraManager = (CameraManager) mCtx.getSystemService(Context.CAMERA_SERVICE);
-//        }
-//
-//        if(mCameraID.isEmpty()) {
-//            mCameraManager.registerTorchCallback(new CameraManager.TorchCallback() {
-//                @Override
-//                public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
-//                    super.onTorchModeChanged(cameraId, enabled);
-//                    mCameraID = cameraId;
-//                }
-//            }, new Handler());
-//        }
-//    }
 
     public Runnable blink1(){
         final Runnable r = new Runnable() {
