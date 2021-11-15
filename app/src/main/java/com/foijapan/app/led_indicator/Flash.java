@@ -3,8 +3,10 @@ package com.foijapan.app.led_indicator;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
@@ -12,55 +14,80 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class Flash extends Activity{
+public class Flash{
     private String mCameraID = "";
     private CameraManager mCameraManager = null;
     private Context mCtx = null;
     private final Handler handler = new Handler();
 
-    @Override
-    public void onCreate(Bundle si){
-        super.onCreate(si);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.flash_preview);
+    Flash(Context context){
+        mCtx = context;
+    }
 
-        setCameraInfo();
-        blink3();
+    private boolean flashLightOn() {
+        try {
+            if (mCameraManager == null) {
+                initCameraManagerInstance();
+            }
+            String cameraId = mCameraManager.getCameraIdList()[0];
+            mCameraManager.setTorchMode(cameraId, true);
+        } catch (CameraAccessException e) {
+            return false;
+        }
+        return true;
+    }
 
+    //    Stop Torch mode using below code:
+    private boolean flashLightOff() {
+        try {
+            if (mCameraManager == null) {
+                initCameraManagerInstance();
+            }
+            String cameraId = mCameraManager.getCameraIdList()[0];
+            mCameraManager.setTorchMode(cameraId, false);
+        } catch (CameraAccessException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private void initCameraManagerInstance() {
+        if (mCameraManager == null) {
+            mCameraManager = (CameraManager) mCtx.getSystemService(Context.CAMERA_SERVICE);
+        }
     }
 
     private void setTorch(boolean isFlash){
-        if(mCameraManager == null || mCameraID.isEmpty()) {
-            setCameraInfo();
+        if(isFlash) {
+            flashLightOn();
         }
-        try {
-            mCameraManager.setTorchMode(mCameraID, isFlash);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
+        else{
+            flashLightOff();
         }
     }
 
-    private void setCameraInfo() {
-        if(mCameraManager == null) {
-            mCameraManager = (CameraManager) mCtx.getSystemService(Context.CAMERA_SERVICE);
-        }
-
-        if(mCameraID.isEmpty()) {
-            mCameraManager.registerTorchCallback(new CameraManager.TorchCallback() {
-                @Override
-                public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
-                    super.onTorchModeChanged(cameraId, enabled);
-                    mCameraID = cameraId;
-                }
-            }, new Handler());
-        }
-    }
+//    private void setCameraInfo() {
+//        if(mCameraManager == null) {
+//            mCameraManager = (CameraManager) mCtx.getSystemService(Context.CAMERA_SERVICE);
+//        }
+//
+//        if(mCameraID.isEmpty()) {
+//            mCameraManager.registerTorchCallback(new CameraManager.TorchCallback() {
+//                @Override
+//                public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
+//                    super.onTorchModeChanged(cameraId, enabled);
+//                    mCameraID = cameraId;
+//                }
+//            }, new Handler());
+//        }
+//    }
 
     public Runnable blink1(){
         final Runnable r = new Runnable() {
