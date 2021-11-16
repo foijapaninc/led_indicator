@@ -3,6 +3,7 @@ package com.foijapan.app.led_indicator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -20,6 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,7 +37,7 @@ public class MainActivity extends Activity {
     static PackageListAdapter adapter = null;
 
     int mNumOfCheckedApp = 0;
-    List<String> mPns = new ArrayList<String>();
+    ArrayList<String> mPns = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +69,12 @@ public class MainActivity extends Activity {
                         addPackages(getCheckedPackageName(i));
                     }
                 }
+                SharedArrayList sal = new SharedArrayList(getApplicationContext());
+                sal.clearArrayList(Common.LIST_OF_CHECKED_APP);
+
                 Intent intent = new Intent();
                 intent.putExtra(Common.LIST_OF_CHECKED_APP, (Serializable) mPns);
+                sal.putStringArrayPref(Common.LIST_OF_CHECKED_APP,mPns);
                 intent.setClass(getApplicationContext(),Pref.class);
                 startActivity(intent);
             }
@@ -100,8 +107,7 @@ public class MainActivity extends Activity {
         return  al.readFromFile();
     }
 
-    protected void updatePackageList(){
-        // 端末にインストール済のアプリケーション一覧情報を取得
+    protected void updatePackageList() {
         final PackageManager pm = getPackageManager();
         final int flags = PackageManager.GET_META_DATA;
         final List<ApplicationInfo> installedAppList = pm.getInstalledApplications(flags);
@@ -134,6 +140,7 @@ public class MainActivity extends Activity {
                     String label = app.loadLabel(pm).toString();
                     Drawable drawable = app.loadIcon(pm);
                     String packagename = app.packageName;
+
                     dataList.add(new AppInfos(packagename, label, drawable, false));
                 }
             }
@@ -182,6 +189,21 @@ public class MainActivity extends Activity {
 
                 textView1.setText(aInfo.getLabel());
                 imageView1.setImageDrawable(aInfo.getDrawable());
+
+                SharedArrayList sal = new SharedArrayList(getApplicationContext());
+                try {
+                    ArrayList<String> pns = sal.getStringArrayPref(Common.LIST_OF_CHECKED_APP);
+                    for(int i = 0;i < pns.size();i++){
+                        String packagename = pns.get(i);
+                        if(packagename.equals(aInfo.getPackageName())){
+                            cb.setChecked(true);
+                            continue;
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 cb.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -17,9 +17,6 @@ import java.util.ArrayList;
 
 public class Pref extends Activity implements TextWatcher
 {
-    private int mMin = 0;
-    private int mSec = 0;
-
     @Override
     public void onCreate(Bundle si){
         super.onCreate(si);
@@ -32,6 +29,8 @@ public class Pref extends Activity implements TextWatcher
         final CheckBox cbInfinity = findViewById(R.id.id_cb_tn_infinity);
         final EditText etMin = findViewById(R.id.id_et_min);
         final EditText etSec = findViewById(R.id.id_et_sec);
+        final SharedPreferences pref = getSharedPreferences(Common.PREF,MODE_PRIVATE);
+        final SharedPreferences.Editor edit = pref.edit();
 
         etMin.addTextChangedListener(this);
         etSec.addTextChangedListener(this);
@@ -50,49 +49,7 @@ public class Pref extends Activity implements TextWatcher
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String warning = "";
-                SharedPreferences pref = getSharedPreferences(Common.PREF,MODE_PRIVATE);
-                SharedPreferences.Editor edit = pref.edit();
-                edit.putInt(Common.CHECKED_NUM,pns.size());
-
-                for (int i = 0; i < pns.size();i++) {
-                    edit.putString(Common.CHECKED_APP+String.valueOf(i), pns.get(i));
-                }
-
-                int setMin = getMin(etMin);
-                if(setMin <= 0 || setMin > 99) {
-                    warning = String.format(getString(R.string.str_tst_err_pref),
-                                                    getString(R.string.str_time_notification1),
-                                                    getString(R.string.str_time_notification2));
-                }
-
-                if(!(cbInfinity.isChecked()) && !warning.isEmpty()){
-                    Toast.makeText(getApplicationContext(),warning,Toast.LENGTH_SHORT).show();
-                    warning = "";
-                }
-
-                int setSec = getSec(etSec);
-                if(setSec <= 0 || setSec> 99) {
-                    warning = String.format(getString(R.string.str_tst_err_pref),
-                            getString(R.string.str_repeat_interval1),
-                            getString(R.string.str_repeat_interval2));
-                }
-
-                if(!warning.isEmpty()){
-                    Toast.makeText(getApplicationContext(),warning,Toast.LENGTH_SHORT).show();
-                }
-
-                initialize(edit);
-
-                edit.putBoolean(Common.DURATION_INFINITY,cbInfinity.isChecked());
-                if(cbInfinity.isChecked()){
-                    edit.putInt(Common.DURATION, 0);
-                }
-                else {
-                    edit.putInt(Common.DURATION,Integer.parseInt(etMin.getText().toString()));
-                }
-                edit.putInt(Common.INTERVAL,Integer.parseInt(etSec.getText().toString()));
-                edit.apply();
+                storeSettingsToPreference(edit,pns,etMin,cbInfinity,etSec);
             }
         });
 
@@ -105,6 +62,56 @@ public class Pref extends Activity implements TextWatcher
                 flash.blink2();
             }
         });
+    }
+
+    private void storeSettingsToPreference(SharedPreferences.Editor edit,
+                                           ArrayList<String> pns,
+                                           EditText etMin,
+                                           CheckBox cbInfinity,
+                                           EditText etSec)
+    {
+        String warning = "";
+
+        edit.putInt(Common.CHECKED_NUM,pns.size());
+
+        for (int i = 0; i < pns.size();i++) {
+            edit.putString(Common.CHECKED_APP+String.valueOf(i), pns.get(i));
+        }
+
+        int setMin = getMin(etMin);
+        if(setMin <= 0 || setMin > 99) {
+            warning = String.format(getString(R.string.str_tst_err_pref),
+                    getString(R.string.str_time_notification1),
+                    getString(R.string.str_time_notification2));
+        }
+
+        if(!(cbInfinity.isChecked()) && !warning.isEmpty()){
+            Toast.makeText(getApplicationContext(),warning,Toast.LENGTH_SHORT).show();
+            warning = "";
+        }
+
+        int setSec = getSec(etSec);
+        if(setSec <= 0 || setSec> 99) {
+            warning = String.format(getString(R.string.str_tst_err_pref),
+                    getString(R.string.str_repeat_interval1),
+                    getString(R.string.str_repeat_interval2));
+        }
+
+        if(!warning.isEmpty()){
+            Toast.makeText(getApplicationContext(),warning,Toast.LENGTH_SHORT).show();
+        }
+
+        initialize(edit);
+
+        edit.putBoolean(Common.DURATION_INFINITY,cbInfinity.isChecked());
+        if(cbInfinity.isChecked()){
+            edit.putInt(Common.DURATION, 0);
+        }
+        else {
+            edit.putInt(Common.DURATION,Integer.parseInt(etMin.getText().toString()));
+        }
+        edit.putInt(Common.INTERVAL,Integer.parseInt(etSec.getText().toString()));
+        edit.apply();
     }
 
     private void initialize(SharedPreferences.Editor editor){
