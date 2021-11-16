@@ -38,7 +38,7 @@
                 android:layout_marginEnd="10dp"
                 android:digits="01234567890"
                 android:maxLines="1"
-                android:maxLength="3"
+                android:maxLength="2"
                 android:inputType="numberDecimal"
                 android:textSize="12dp" />
             <TextView android:layout_width="match_parent"
