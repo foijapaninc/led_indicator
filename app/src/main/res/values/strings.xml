@@ -9,18 +9,17 @@
     <string name="pattern_3">パターン３</string>
     <string name="pattern_preview">プレビュー</string>
 
-    <string name="str_time_notification">%s(%s)</string>
+    <string name="str_time_notification">通知時間(1〜99分)</string>
     <string name="str_time_notification1">通知時間</string>
-    <string name="str_time_notification2">0〜99分</string>
+    <string name="str_time_notification2">1〜99分</string>
     <string name="tn_min">分</string>
     <string name="tn_infinity">通知を削除するまで</string>
-    <string name="str_repeat_interval">%s(%s)</string>
+    <string name="str_repeat_interval">リピート間隔(1〜99秒)</string>
     <string name="str_repeat_interval1">リピート間隔</string>
-    <string name="str_repeat_interval2">0〜99秒</string>
+    <string name="str_repeat_interval2">1〜99秒</string>
     <string name="tn_sec">秒</string>
+    <string name="str_tst_err_pref">%sは%sの範囲で設定してください。</string>
 
-    <string name="str_tst_err_min">¥@string/str_time_notification1 は、@string/str_time_notification2で設定してください。</string>
-    <string name="str_tst_err_sec">¥@string/str_repeat_interval1 は、@string/str_repeat_interval2で設定してください。</string>
     <string name="cancel">キャンセル</string>
     <string name="apply">適用する</string>
     <string name="settings">設定する</string>

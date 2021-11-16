@@ -23,22 +23,29 @@
         android:layout_gravity="right"
         android:gravity="center_vertical|right">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:gravity="bottom|right">
+            android:orientation="horizontal"
+            android:layout_marginEnd="7dp"
+            android:gravity="right|bottom"
+            android:layout_gravity="right|bottom">
             <EditText
                 android:textColor="#000000"
                 android:id="@+id/id_et_sec"
-                android:layout_width="match_parent"
+                android:layout_width="75dp"
                 android:layout_height="50dp"
                 android:gravity="bottom|right"
-                android:digits="01234567890"
                 android:layout_marginEnd="10dp"
-                android:text="@string/tn_sec"
+                android:digits="01234567890"
                 android:maxLines="1"
                 android:maxLength="3"
+                android:inputType="numberDecimal"
                 android:textSize="12dp" />
-
+            <TextView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tn_sec"
+                android:textSize="12dp"
+                android:gravity="bottom|left"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
